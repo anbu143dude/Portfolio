@@ -79,3 +79,6 @@ html.showcase-running .orbit-two{animation:float-two 7s ease-in-out infinite}
 @media(max-width:360px){.orbit-note{display:none}.device-wrap{width:258px}.screen-tabs button{padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){.device-wrap,.motion-showcase:hover .device-wrap{transform:none;transition:none}.device-screen *,.orbit-note{animation:none!important}}
 @media print{.motion-showcase{display:none!important}}
+
+/* Keep floating labels outside the readable device content. */
+.orbit-one{top:12px}.orbit-two{bottom:88px}
