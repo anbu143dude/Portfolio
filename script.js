@@ -8,7 +8,7 @@
  const links=[...nav.querySelectorAll('a')];
  let motion=!preference.matches;
  let observer=null;
- const seen=new WeakSet();
+ let seen=new WeakSet();
  const targets=[...document.querySelectorAll('.impact,.panel,.contact-bar')];
  function positionIndicator(link){
   indicator.style.width=link.offsetWidth+'px';
@@ -33,20 +33,23 @@
   targets.forEach(el=>{el.removeAttribute('data-aos');el.removeAttribute('data-aos-delay');el.classList.remove('aos-init','aos-animate');});
   if(observer) observer.disconnect();
   targets.forEach(el=>el.getAnimations().forEach(animation=>animation.cancel()));
+  seen=new WeakSet();
   if(motion && 'IntersectionObserver' in window){
    observer=new IntersectionObserver(entries=>{
+    let stagger=0;
     entries.forEach(entry=>{
-     if(!entry.isIntersecting)return;
+     if(!entry.isIntersecting || seen.has(entry.target))return;
+     seen.add(entry.target);
      observer.unobserve(entry.target);
-     if(entry.target.getBoundingClientRect().top>0 && !seen.has(entry.target)){
-      seen.add(entry.target);
-      entry.target.animate([{transform:'translateY(10px)'},{transform:'translateY(0)'}],{duration:320,easing:'ease-out'});
-     }
+     if(typeof entry.target.animate!=='function')return;
+     entry.target.animate(
+      [{transform:'translateY(22px) scale(.985)',opacity:.82},
+       {transform:'translateY(0) scale(1)',opacity:1}],
+      {duration:620,delay:Math.min(stagger++,3)*85,easing:'cubic-bezier(.2,.8,.2,1)'}
+     );
     });
-   },{threshold:0.08});
-   targets.forEach(el=>{
-    if(el.getBoundingClientRect().top>=innerHeight)observer.observe(el);
-   });
+   },{threshold:0.01});
+   targets.forEach(el=>observer.observe(el));
   }
   toggle.hidden=false;
   toggle.disabled=preference.matches;
