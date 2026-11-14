@@ -48,3 +48,6 @@
  :is(.impact,.panel,.contact-bar){translate:none!important}
 }
 @media print{.impact,.panel,.contact-bar{translate:none!important;transform:none!important;box-shadow:none!important}}
+
+/* Align the skills card with the first experience card below its section title. */
+@media screen and (min-width:761px){.secondary-column{padding-top:39.4px}}
