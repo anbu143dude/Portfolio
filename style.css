@@ -14,3 +14,13 @@
 @media(max-width:520px){.role{font-size:14px}.header-actions .button.primary{font-size:14px}}
 
 @media (hover:hover) and (prefers-reduced-motion:no-preference){.motion-enabled .panel{transition:box-shadow .25s ease,border-color .25s ease}.motion-enabled .panel:hover{border-color:#accbc5;box-shadow:0 8px 24px #1534400c}}
+
+/* Individual experience cards share the existing panel animation and styling. */
+.experience>.section-heading{padding:0 2px;margin-bottom:16px}
+.experience>.experience-card{margin-bottom:18px;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.experience>.experience-card:last-child{margin-bottom:0}
+.experience>.earlier>summary{padding:0;min-height:36px;font-size:15px;color:var(--navy)}
+.experience>.earlier .earlier-list{margin-top:12px}
+@media(max-width:1000px){.experience>.experience-card{padding:20px}}
+@media(max-width:520px){.experience>.experience-card{padding:19px 17px;margin-bottom:16px}}
+@media print{.experience>.experience-card{box-shadow:none;border:0;border-radius:0;padding:12px 0;margin-bottom:8px}}
