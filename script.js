@@ -7,6 +7,8 @@
  const indicator=document.querySelector('.nav-indicator');
  const links=[...nav.querySelectorAll('a')];
  let motion=!preference.matches;
+ let observer=null;
+ const seen=new WeakSet();
  const targets=[...document.querySelectorAll('.impact,.panel,.contact-bar')];
  function positionIndicator(link){
   indicator.style.width=link.offsetWidth+'px';
@@ -29,12 +31,22 @@
   root.classList.toggle('motion-enabled',motion);
   root.classList.remove('motion-ready');
   targets.forEach(el=>{el.removeAttribute('data-aos');el.removeAttribute('data-aos-delay');el.classList.remove('aos-init','aos-animate');});
-  if(motion&&window.AOS){
-   try{
-    targets.forEach((el,i)=>{el.setAttribute('data-aos','fade-up');el.setAttribute('data-aos-delay',String(i<3?i*85:0));});
-    window.AOS.init({duration:600,offset:20,once:true,easing:'ease-out-cubic'});
-    root.classList.add('motion-ready');
-   }catch(_){root.classList.remove('motion-ready');}
+  if(observer) observer.disconnect();
+  targets.forEach(el=>el.getAnimations().forEach(animation=>animation.cancel()));
+  if(motion && 'IntersectionObserver' in window){
+   observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+     if(!entry.isIntersecting)return;
+     observer.unobserve(entry.target);
+     if(entry.target.getBoundingClientRect().top>0 && !seen.has(entry.target)){
+      seen.add(entry.target);
+      entry.target.animate([{transform:'translateY(10px)'},{transform:'translateY(0)'}],{duration:320,easing:'ease-out'});
+     }
+    });
+   },{threshold:0.08});
+   targets.forEach(el=>{
+    if(el.getBoundingClientRect().top>=innerHeight)observer.observe(el);
+   });
   }
   toggle.hidden=false;
   toggle.disabled=preference.matches;
@@ -47,7 +59,7 @@
  document.querySelectorAll('details').forEach(detail=>detail.addEventListener('toggle',()=>{
   const body=detail.querySelector('.detail-body');
   if(detail.open&&motion&&body.animate)body.animate([{opacity:0,transform:'translateY(-8px)'},{opacity:1,transform:'translateY(0)'}],{duration:340,easing:'cubic-bezier(.2,.8,.2,1)'});
-  if(window.AOS)window.AOS.refresh();
+
  }));
  positionIndicator(links[0]);fromHash();setMotion(motion);
 })();
