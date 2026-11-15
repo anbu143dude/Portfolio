@@ -1,37 +1,56 @@
-name: Build CV PDF
+name: Build CV PDF and Word document
 on:
   push:
     branches: [main]
     paths:
-      - 'Anand_Babu_P_CV.rtf'
+      - 'cv-source.html'
+      - '.github/workflows/build-cv.yml'
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
-  convert:
+  build-cv:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Convert Word-compatible RTF to PDF
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install document builders
         run: |
           sudo apt-get update
-          sudo apt-get install -y libreoffice
-          mkdir -p /tmp/cv-out
-          libreoffice --headless --convert-to pdf --outdir /tmp/cv-out Anand_Babu_P_CV.rtf
-          libreoffice --headless --convert-to docx --outdir /tmp/cv-out Anand_Babu_P_CV.rtf
-          test -s /tmp/cv-out/Anand_Babu_P_CV.pdf
-          test -s /tmp/cv-out/Anand_Babu_P_CV.docx
-          cp /tmp/cv-out/Anand_Babu_P_CV.pdf ./Anand_Babu_P_CV.pdf
-          cp /tmp/cv-out/Anand_Babu_P_CV.docx ./Anand_Babu_P_CV.docx
-      - name: Commit updated PDF
+          sudo apt-get install -y pandoc libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 libcairo2 libffi-dev shared-mime-info poppler-utils
+          python -m pip install --upgrade pip
+          python -m pip install weasyprint
+
+      - name: Build styled PDF
+        run: |
+          weasyprint cv-source.html Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.pdf
+          pdfinfo Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.pdf | grep -E '^Pages: *2$'
+
+      - name: Build editable Word document
+        run: |
+          pandoc cv-source.html --from=html --to=docx --output=Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.docx
+
+      - name: Validate outputs
+        run: |
+          test -s Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.pdf
+          test -s Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.docx
+          unzip -t Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.docx
+
+      - name: Commit downloadable CV files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Anand_Babu_P_CV.pdf Anand_Babu_P_CV.docx
+          git add Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.pdf Anand_Babu_P_Azure_AIOps_Senior_Engineer_CV.docx
           if ! git diff --cached --quiet; then
-            git commit -m "Build updated CV PDF from Word-compatible source"
-            git push
+            git commit -m "Publish latest Azure Cloud Platform and AI Engineer CV"
+            git push origin main
           fi
