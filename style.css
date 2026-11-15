@@ -51,3 +51,13 @@
 
 /* Align the skills card with the first experience card below its section title. */
 @media screen and (min-width:761px){.secondary-column{padding-top:39.4px}}
+
+/* CV download dropdown: retain the existing button appearance and expose both file formats. */
+.download-menu{position:relative;display:inline-block;text-align:left;z-index:30}
+.download-menu>summary{display:inline-flex;list-style:none;gap:10px}
+.download-menu>summary::-webkit-details-marker{display:none}
+.download-caret{font-size:15px;line-height:1;margin-left:1px}
+.download-options{position:absolute;right:0;top:calc(100% + 8px);min-width:190px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 28px #15344020;display:grid;gap:2px;z-index:40}
+.download-options a{display:block;padding:10px 12px;border-radius:6px;color:var(--ink);font-size:12px;font-weight:600;white-space:nowrap}
+.download-options a:hover{background:#eef5f5;text-decoration:none}
+@media(max-width:520px){.download-menu{display:inline-block}.download-options{left:0;right:auto}}
