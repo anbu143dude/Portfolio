@@ -68,3 +68,30 @@
 .ai-focus .focus-label{font-size:10px;font-weight:800;letter-spacing:.45px;color:#315e59;margin-right:3px}
 .ai-focus span:not(.focus-label){display:inline-flex;align-items:center;padding:4px 9px;border:1px solid #d7e5df;border-radius:999px;background:#fff;color:#315e59;font-size:10px;font-weight:600}
 @media(max-width:620px){.ai-focus{gap:6px;margin:-3px 0 15px;padding:9px}.ai-focus .focus-label{width:100%}}
+
+/* Animated competency scorecard — designed as a CV sidebar, not a standalone dashboard. */
+.competency-card{position:relative;overflow:hidden;background:linear-gradient(155deg,#fff 0%,#f8fbfa 100%);border-color:#d5e4e0}
+.competency-card:before{content:"";position:absolute;width:180px;height:180px;right:-95px;top:-105px;border:26px solid #d9eee7;border-radius:50%;opacity:.55;pointer-events:none}
+.competency-intro{font-size:11px;line-height:1.65;color:#6b8085;margin:13px 0 17px}
+.competency-featured{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 18px}
+.competency-ring{--score:0;position:relative;width:100%;max-width:138px;aspect-ratio:1;margin:auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#07877f calc(var(--score)*1%),#e5eeeb 0);transition:background 1.25s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 5px 10px #15344010)}
+.competency-ring:before{content:"";position:absolute;inset:8px;background:#fff;border:1px solid #e5eeeb;border-radius:50%}
+.competency-ring.ring-secondary{background:conic-gradient(#4d8294 calc(var(--score)*1%),#e5eeeb 0)}
+.ring-inner{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;max-width:90px;line-height:1}
+.ring-inner strong{font-size:29px;letter-spacing:-1.4px;color:#194c50;font-weight:800;font-variant-numeric:tabular-nums}
+.ring-inner>span{font-size:11px;color:#52777a;font-weight:700}
+.ring-inner small{flex-basis:100%;text-align:center;margin-top:8px;font-size:9px;line-height:1.3;color:#668087;font-weight:700}
+.competency-list{display:grid;gap:13px}
+.competency-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;line-height:1.4;color:#526a72;margin-bottom:6px}
+.competency-label strong{color:#176f6c;font-size:10px;font-variant-numeric:tabular-nums}
+.competency-track{height:6px;border-radius:99px;background:#e7efed;overflow:hidden}
+.competency-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#4e9b91,#087b7d);transition:width 1.15s cubic-bezier(.2,.8,.2,1)}
+.competency-item:nth-child(2n) .competency-track span{background:linear-gradient(90deg,#75a9ad,#477f91)}
+.competency-foot{display:flex;align-items:center;gap:7px;margin-top:17px;padding-top:12px;border-top:1px solid #e5eeeb;font-size:9px;line-height:1.5;color:#788d91}
+.competency-pulse{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#20a18f;box-shadow:0 0 0 3px #20a18f20}
+.competency-card.is-animated .competency-ring{background:conic-gradient(#07877f calc(var(--score)*1%),#e5eeeb 0)}
+.competency-card.is-animated .ring-secondary{background:conic-gradient(#4d8294 calc(var(--score)*1%),#e5eeeb 0)}
+@media(max-width:760px){.competency-featured{max-width:360px;margin-left:auto;margin-right:auto}.competency-ring{max-width:145px}}
+@media(max-width:520px){.competency-featured{max-width:330px;gap:20px}.competency-ring{max-width:132px}.competency-label{font-size:11px}.competency-label strong{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.competency-ring,.competency-track span{transition:none!important}}
+@media print{.competency-card{break-inside:avoid;background:#fff;box-shadow:none}.competency-ring{background:conic-gradient(#07877f calc(var(--score)*1%),#e5eeeb 0)!important}.competency-track span{print-color-adjust:exact}}
