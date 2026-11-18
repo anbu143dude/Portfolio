@@ -10,6 +10,36 @@
  let observer=null;
  let seen=new WeakSet();
  const targets=[...document.querySelectorAll('.impact,.panel,.contact-bar')];
+ const competency=document.querySelector('.competency-card');
+ let competencyStarted=false;
+ function animateCompetencies(){
+  if(!competency||competencyStarted)return;
+  competencyStarted=true;
+  competency.classList.add('is-animated');
+  competency.querySelectorAll('.competency-ring').forEach(ring=>ring.style.setProperty('--score',ring.dataset.score));
+  competency.querySelectorAll('[data-bar]').forEach((bar,index)=>{bar.style.transitionDelay=(index*90)+'ms';bar.style.width=bar.dataset.bar+'%';});
+  competency.querySelectorAll('.score-count').forEach(counter=>{
+   const target=Number(counter.dataset.target)||0;
+   const start=performance.now(),duration=1050;
+   function tick(now){
+    const progress=Math.min(1,(now-start)/duration);
+    const eased=1-Math.pow(1-progress,3);
+    counter.textContent=Math.round(target*eased)+(counter.closest('.competency-label')?'%':'');
+    if(progress<1)requestAnimationFrame(tick);
+   }
+   requestAnimationFrame(tick);
+  });
+ }
+ if(competency){
+  if(preference.matches)animateCompetencies();
+  else if('IntersectionObserver' in window){
+   const competencyObserver=new IntersectionObserver(entries=>{
+    if(entries.some(entry=>entry.isIntersecting)){animateCompetencies();competencyObserver.disconnect();}
+   },{threshold:.22});
+   competencyObserver.observe(competency);
+  }else animateCompetencies();
+ }
+
  function positionIndicator(link){
   indicator.style.width=link.offsetWidth+'px';
   indicator.style.height=link.offsetHeight+'px';
